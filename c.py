@@ -1,23 +1,19 @@
 import socket
-sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-print('Socket Created')
-
 host='127.0.0.1'
 port=12000
+buffer_size=1024
+file_name='myfile.txt'
 
-sock.connect((host,port))
-print('Connection Established')
+sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 
-sock.send('A message from client'.encode())
+f=open('myfile.txt','r')
+data=(f.read(buffer_size))
 
-f=open('c.txt','wb')
-line=sock.recv(1024)
-
-while line:
-    f.write(line)
-    line=sock.recv(1024)
-    
-print('successfully received')
+while data:
+    print(data)
+    if(sock.sendto(str.encode(data),(host,port))):
+        data=(f.read(buffer_size))
+sock.sendto(str.encode('Now'),(host,port))
+print('File Sent successfully')
 f.close()
 sock.close()
-print('Connection Closed')
